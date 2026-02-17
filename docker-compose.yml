@@ -1,0 +1,14 @@
+services:
+  db:
+    image: pgvector/pgvector:pg17  # prebuilt postgres image with pgvector
+    container_name: postgres-pgvector
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: amelie
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: embedding_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
