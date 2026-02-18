@@ -5,8 +5,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: amelie
-      POSTGRES_PASSWORD: 123
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: embedding_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
