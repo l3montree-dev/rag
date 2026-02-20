@@ -1,7 +1,39 @@
 # RAG Demo
-This project is a minimal Retrieval-Augmented Generation (RAG) setup using
-Mistral AI, PostgreSQL with pgvector, and Jupyter Notebooks.
+This project implements a minimal Retrieval-Augmented Generation (RAG) pipeline using Mistral AI, PostgreSQL with pgvector, and Flask.
 
+## Architecture
+
+The system follows a simple RAG pipeline:
+
+1. Markdown documents are loaded and chunked.
+2. Chunks are embedded using Mistral embeddings.
+3. Embeddings are stored in PostgreSQL with pgvector.
+4. At query time:
+   - The query is embedded.
+   - Top-k similar chunks are retrieved.
+   - The LLM generates an answer using the retrieved context.
+
+
+## Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+API_KEY=your_api_key
+DOCS_PATH=/path/to/your/markdown/files
+DB_USER=user
+DB_PASSWORD=password
+```
+
+## Virtual Environment Setup
+Set up the venv and load the necessary requirements to run the project:
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+```
 ## Database Initialization
 
 Run the following SQL commands **in order** after connecting to your PostgreSQL database.
@@ -37,4 +69,20 @@ Confirm that the table and vector dimension are correct.
 ```
 ```sql
 SELECT vector_dims(embedding) FROM documents LIMIT 1;
+```
+
+## Index Documents
+
+Before running queries, you must index your documents:
+
+```bash
+python scripts/index_documents.py
+``` 
+
+## Run the API Server
+
+From the project root to start the API Server:
+
+```bash
+python run.py
 ```
