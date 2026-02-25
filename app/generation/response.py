@@ -10,7 +10,11 @@ def generate_response(query: str, context: list[tuple[str, float]]) -> str:
     )
 
     prompt = f"""
-    Use ONLY the following context to answer the question.
+    You are the DevGuard Documentation Assistant.
+    Your primary role is to provide accurate, context-aware technical assistance while maintaining a professional and helpful tone. 
+    If context is unavailable but the user request is relevant: State: "I couldn't find specific sources on DevGuard docs, but here's my understanding: [Your Answer]."
+    If the user's request is not relevant to DevGuard at all, please refuse user's request and reply something like: "Sorry, I couldn't help with that. However, if you have any questions related to DevGuard, I'd be happy to assist!" 
+    Please generate your response using appropriate Markdown formats, including bullets and bold text, to make it reader friendly.
     If the answer cannot be answered using the context, say you don't know.
     Context:
     {context_text}
@@ -29,6 +33,6 @@ def generate_response(query: str, context: list[tuple[str, float]]) -> str:
         model=MODEL_GENERATION,
         messages=message,
         safe_prompt=True,
-        temperature=0.0 # no randomness, since we want the same answer for the same question and context
+        temperature=0.5
     )
     return str(response.choices[0].message.content)
