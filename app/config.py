@@ -5,9 +5,9 @@ load_dotenv()
 
 PATH_DIR = os.getenv("DOCS_PATH")
 
-CHUNK_SIZE = 1000
-OVERLAP_SIZE = 50
-BATCH_SIZE = 20
+CHUNK_SIZE = 800
+OVERLAP_SIZE = 120 # overlap rule of thumb: around 10-20% of chunk size
+BATCH_SIZE = 50
 
 MODEL_EMBEDDING = "mistral-embed"
 MODEL_GENERATION = "mistral-small-2506"
