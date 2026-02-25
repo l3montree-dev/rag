@@ -1,11 +1,11 @@
 from app.ingestion.reader import read_docs
-from app.ingestion.chunking import chunking
+from app.ingestion.chunking import recursive_chunking
 from app.ingestion.embedding import get_embeddings
 from app.clients import get_db_connection
 
 # read, chunk and embed the docs
 docs = read_docs()
-chunks = chunking(docs)
+chunks = recursive_chunking(docs)
 embeddings = get_embeddings(chunks)
 
 conn = get_db_connection()
