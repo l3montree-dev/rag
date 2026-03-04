@@ -152,7 +152,7 @@ http://127.0.0.1:5000/
 ## How the A/B System works
 - All unique config pairs are generated per question
 - Each comparison is shown exactly once
-- Votes are stored in ```ab_votes```
+- Votes are stored in ```ab_results```
 - Pairs are marked as answered in ```ab_pairs```
 - When all comparisons are complete, the interface stops
 
