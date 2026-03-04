@@ -86,3 +86,76 @@ From the project root to start the API Server:
 ```bash
 python run.py
 ```
+
+# A/B Testing Evaluation
+This project includes an A/B evaluation interface to compare different RAG configurations (e.g. chunk size, temperature, top-k retrieval).
+
+The system:
+
+- Generates answers for multiple configurations
+- Creates all unique pairwise comparisons per question
+- Stores comparisons in PostgreSQL
+- Allows human evaluators to vote
+- Stores votes for later Bradley–Terry / Gaussian Process analysis
+
+## Database Setup for A/B Testing
+Run the following commands after connecting to PostgreSQL.
+```sql
+CREATE TABLE IF NOT EXISTS ab_pairs (
+    id SERIAL PRIMARY KEY,
+    question TEXT NOT NULL,
+    config_a TEXT NOT NULL,
+    config_b TEXT NOT NULL,
+    answered BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS ab_results (
+    id SERIAL PRIMARY KEY,
+    question TEXT NOT NULL,
+    config_a TEXT NOT NULL,
+    config_b TEXT NOT NULL,
+    winner TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+## Generate Evaluation Data
+You must first generate responses for all configurations. This can be done with ```generate_data.ipynb```
+
+Example expected format (data.json):
+```json
+[
+  {
+    "config": "config_1",
+    "results": [
+      {
+        "question": "How can I search for license risks?",
+        "answer": "..."
+      }
+    ]
+  }
+]
+```
+
+Place this file in the project root.
+
+## Start the A/B Testing Server
+Run:
+```bash
+python3 -m app.api.testing_server
+```
+Then open:
+```
+http://127.0.0.1:5000/
+```
+
+## How the A/B System works
+- All unique config pairs are generated per question
+- Each comparison is shown exactly once
+- Votes are stored in ```ab_votes```
+- Pairs are marked as answered in ```ab_pairs```
+- When all comparisons are complete, the interface stops
+
+For 5 configs and 5 questions:
+- 10 comparisons per question
+- 50 total comparisons
