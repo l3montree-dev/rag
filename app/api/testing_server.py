@@ -25,8 +25,8 @@ for config_block in raw_data:
         })
 
 # get unique questions and configs for preparing the pairs in the db
-questions = list(set(p["question"] for p in pairs))
-configs = list(set(p["config"] for p in pairs))
+questions : list[str] = list(set(p["question"] for p in pairs))
+configs : list[str] = list(set(p["config"] for p in pairs))
 
 # prepare all unique pairs of configs for each question and insert into db if not already there
 def prepare_pairs():
@@ -34,6 +34,7 @@ def prepare_pairs():
     cur = conn.cursor()
     # insert unique pairs of configs for each question into the ab_pairs table, but only if they don't already exist
     for question in questions:
+        # filter pairs for the current question
         configs_for_question = [p for p in pairs if p["question"] == question]
         for a, b in combinations(configs_for_question, 2):
             cur.execute("""
@@ -53,7 +54,7 @@ def prepare_pairs():
 
 
 # get the next unanswered pair from the db, along with the corresponding answers, and randomize left/right
-def get_next_pair():
+def get_next_pair() -> tuple[int, str, dict, dict] | None:
     conn = get_db_connection()
     cur = conn.cursor()
     
