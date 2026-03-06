@@ -10,7 +10,7 @@ app = Flask(__name__)
 # load the data from the json file
 BASE_DIR = os.path.dirname(__file__)
 DATA_PATH = os.path.join(BASE_DIR, "data.json")
-with open(DATA_PATH) as f:
+with open(DATA_PATH, "r", encoding="utf-8") as f:
     raw_data = json.load(f)
 
 # flatten into question/config/answer structure
@@ -32,7 +32,7 @@ configs : list[str] = list(set(p["config"] for p in pairs))
 def prepare_pairs():
     conn = get_db_connection()
     cur = conn.cursor()
-    # insert unique pairs of configs for each question into the ab_pairs table, but only if they don't already exist
+    # insert unique pairs of configs for each question into the ab_pairs table (if they don't already exist)
     for question in questions:
         # filter pairs for the current question
         configs_for_question = [p for p in pairs if p["question"] == question]
@@ -154,4 +154,4 @@ def vote():
 
 if __name__ == "__main__":
     prepare_pairs()
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
