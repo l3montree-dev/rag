@@ -8,17 +8,17 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: 5432
-      DB_NAME: embedding_db
-      DB_USER: user
-      DB_PASSWORD: password
+      DB_NAME: ${POSTGRES_DB}$
+      DB_USER: ${POSTGRES_USER}$
+      DB_PASSWORD: ${POSTGRES_PASSWORD}$
 
   db:
     image: pgvector/pgvector:pg17  # prebuilt postgres image with pgvector
     restart: always
     environment:
-      POSTGRES_DB: embedding_db
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ${POSTGRES_DB}$
+      POSTGRES_USER: ${POSTGRES_USER}$
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}$
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
