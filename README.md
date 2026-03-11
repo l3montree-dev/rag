@@ -21,8 +21,9 @@ Create a `.env` file in the project root:
 ```env
 API_KEY=your_api_key
 DOCS_PATH=/path/to/your/markdown/files
-DB_USER=user
-DB_PASSWORD=password
+POSTGRES_DB=your_db
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
 ```
 
 ## Virtual Environment Setup
