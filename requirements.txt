@@ -1,5 +1,5 @@
 Flask>=3.0
-mistralai>=1.12
+mistralai==1.2.0
 psycopg2-binary>=2.9
 python-dotenv>=1.0
 Flask-Limiter>=3.5
