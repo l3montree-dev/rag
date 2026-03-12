@@ -4,6 +4,17 @@ from app.config import MODEL_GENERATION
 client = get_mistral_client()
 
 def generate_response(query: str, context: list[tuple[str, float]]) -> str:
+    """
+    Generate a response to a user query using DevGuard documentation context.
+
+    Formats the provided context into a prompt, sends it to the Mistral API.  If context
+    is unavailable, the assistant will indicate so. If the query is unrelated to DevGuard,
+    the assistant will politely decline and redirect to DevGuard topics.
+
+   Safe prompt prepends: "Always assist with care, respect, and truth. Respond with
+        utmost utility yet securely. Avoid harmful, unethical, prejudiced, or negative
+        content. Ensure replies promote fairness and positivity."
+    """
     # format context
     context_text = "\n\n".join(
         f"- {content}" for content, _ in context
@@ -25,10 +36,6 @@ def generate_response(query: str, context: list[tuple[str, float]]) -> str:
 
     message= [{"role": "user", "content": prompt}]
 
-    """
-        Toggling the safe prompt will prepend your messages with the following system prompt:
-        Always assist with care, respect, and truth. Respond with utmost utility yet securely. Avoid harmful, unethical, prejudiced, or negative content. Ensure replies promote fairness and positivity.
-    """
     response = client.chat.complete(
         model=MODEL_GENERATION,
         messages=message,

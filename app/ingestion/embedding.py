@@ -3,8 +3,8 @@ from typing import cast
 from app.clients import get_mistral_client
 from app.config import BATCH_SIZE, MODEL_EMBEDDING
 
-# get the embeddings for a list of chunks, return a list of embeddings
 def get_embeddings(chunks: list[str]) -> list[list[float]]:
+    """Generate and return embeddings for a list of text chunks"""
     client = get_mistral_client()
     embeddings: list[list[float]] = []
     # call the api with batches to avoid hitting the rate limit
@@ -19,8 +19,8 @@ def get_embeddings(chunks: list[str]) -> list[list[float]]:
             embeddings.append(list(embedding))
     return embeddings
 
-# get embedding for a single chunk of text
 def text_embedding(chunk: str) -> list[float]:
+    """Generate an embedding for a single piece of text"""
     client = get_mistral_client()
     # call the mistral api to get the embedding for the given text
     response = client.embeddings.create(
