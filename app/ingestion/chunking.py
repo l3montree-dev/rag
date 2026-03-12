@@ -1,7 +1,7 @@
 from app.config import CHUNK_SIZE, OVERLAP_SIZE
 
-# split the given docs up in chunks without spliting up words
 def chunking(docs: str) -> list[str]:
+    """Split documentation into chunks of approximately CHUNK_SIZE without breaking words."""
     chunks : list[str] = []
     start : int = 0
     while start < len(docs):
@@ -19,8 +19,9 @@ def chunking(docs: str) -> list[str]:
             start = last_space - OVERLAP_SIZE
     return chunks
 
-# option: apply overlap to the chunks after initial chunking to ensure that there is some context between them
 def apply_overlap(chunks: list[str]) -> list[str]:
+    """Apply overlap to chunks by prepending the last OVERLAP_SIZE characters
+    from the previous chunk to each subsequent chunk"""
     if OVERLAP_SIZE <= 0:
         return chunks
 
@@ -38,9 +39,8 @@ def apply_overlap(chunks: list[str]) -> list[str]:
     return overlapped
 
 
-# split recursively for a hierarchy of separators
-# attempt to split on high-level separators first, then move to increasingly finer separators if chunks remain too large
 def recursive_chunking(docs: str, separators: list[str] = ["\n\n", "\n", ". ", " ", ""]):
+    """Split text recursively using a hierarchy of separators. """
     # base case
     if len(docs) <= CHUNK_SIZE:
         return [docs]
