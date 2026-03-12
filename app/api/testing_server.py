@@ -28,8 +28,12 @@ for config_block in raw_data:
 questions : list[str] = list(set(p["question"] for p in pairs))
 configs : list[str] = list(set(p["config"] for p in pairs))
 
-# prepare all unique pairs of configs for each question and insert into db if not already there
 def prepare_pairs():
+    """Prepare and insert unique configuration pairs for A/B testing.
+    
+    For each question, generates all unique pairs of configurations and inserts
+    them into the ab_pairs table if they don't already exist.
+    """
     conn = get_db_connection()
     cur = conn.cursor()
     # insert unique pairs of configs for each question into the ab_pairs table (if they don't already exist)
@@ -53,8 +57,13 @@ def prepare_pairs():
     conn.close()
 
 
-# get the next unanswered pair from the db, along with the corresponding answers, and randomize left/right
 def get_next_pair() -> tuple[int, str, dict, dict] | None:
+    """Retrieve the next unanswered A/B testing pair with randomized positioning.
+    
+    Fetches an unanswered comparison pair from the database along with their
+    corresponding answers. Randomly assigns configs to left/right positions
+    to avoid position bias.
+    """
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -95,6 +104,11 @@ def get_next_pair() -> tuple[int, str, dict, dict] | None:
 
 @app.route("/")
 def index():
+    """Render the A/B evaluation interface with the next comparison pair.
+    
+    Fetches the next unanswered pair and renders the evaluation template.
+    Returns a completion message when all pairs have been evaluated.
+    """
     pair = get_next_pair()
 
     if not pair:
@@ -113,6 +127,12 @@ def index():
 
 @app.route("/vote", methods=["POST"])
 def vote():
+    """Process and save a user's vote for an A/B comparison pair.
+    
+    Extracts the pair_id and winner choice from the form submission, records
+    the vote in ab_results, marks the pair as answered, and redirects to the
+    next evaluation.
+    """
     pair_id = request.form["pair_id"]
     winner = request.form["winner"]
 
