@@ -22,6 +22,8 @@ Create a `.env` file in the project root:
 API_KEY=your_api_key
 DOCS_PATH=/path/to/your/markdown/files
 POSTGRES_DB=your_db
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
 POSTGRES_USER=user
 POSTGRES_PASSWORD=password
 ```
